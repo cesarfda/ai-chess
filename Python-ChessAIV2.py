@@ -1,3 +1,4 @@
+import time
 import chess
 import chess.svg
 import random
@@ -201,33 +202,27 @@ def find_best_move_with_iterative_deepening(board, max_depth):
         positions_evaluated = 0
         negamax_alpha_beta(board, depth, alpha, beta, move_history)
         best_move = move_history[0]
-        print(f"Depth {depth}: Evaluated {positions_evaluated} positions.")
     return best_move
 
-def main():
+def play_self_game(depth=3):
     board = chess.Board()
-    turn = 0  # Keep track of who's turn it is; 0 for white, 1 for black
-    
     while not board.is_game_over():
-        print("Current board:")
-        print(board)
-        
-        move = find_best_move_with_iterative_deepening(board, DEPTH)
-        
+        start_time = time.time()
+        move = find_best_move_with_iterative_deepening(board, depth)
+        end_time = time.time()
         if move:
-            print(f"{'White' if turn == 0 else 'Black'} moves: {move}")
+            print(f"Move: {move} | Time Taken: {end_time - start_time:.2f} seconds")
             board.push(move)
         else:
-            print("No move found. Game over.")
+            print("No move found or game over.")
             break
-        
-        # Switch turn
-        turn = 1 - turn
+        print(board)
+    print("Game Over. Result:", board.result())
 
-    print("Final board position:")
-    print(board)
-    result = "1/2-1/2" if board.is_stalemate() else "1-0" if board.result() == "1-0" else "0-1"
-    print(f"Game over. Result: {result}")
+def main():
+    # Play a game against itself
+    print("Playing a game against itself...")
+    play_self_game(depth=3)  # You can adjust the depth based on your testing needs
 
 
 if __name__ == "__main__":
